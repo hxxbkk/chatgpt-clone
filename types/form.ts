@@ -5,7 +5,6 @@ export type TSignUpFormError = {
 };
 
 export type TLoginFormError = {
-  name?: string[];
   email?: string[];
   password?: string[];
 };
