@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   const isPublicRoute = PUBLIC_ROUTES.includes(pathname);
 
   const cookie = cookies().get('session')?.value;
-  const session = await verify(cookie);
+  const session = await verify(cookie); 
 
   if (!isPublicRoute && !session) {
     return NextResponse.redirect(new URL(AUTH_ROUTES.LOGIN, request.nextUrl));
