@@ -1,27 +1,17 @@
-'use client';
-
 import { create } from 'zustand';
-import { persist, createJSONStorage } from 'zustand/middleware';
 
 type State = {
   model: string;
 };
 
 type Action = {
-  updateModel: (model: string) => void;
+  updateModel: (model: State['model']) => void;
 };
 
-// Zustand store
-export const useModelStore = create<State & Action>()(
-  persist(
-    (set) => ({
-      model: 'gpt-3.5-turbo',
-      updateModel: (model) => set({ model }),
-    }),
-    {
-      name: 'model-storage',
-      storage: createJSONStorage(() => localStorage),
-      skipHydration: true, // Hydration 문제 방지
-    }
-  )
-);
+// Create your store, which includes both state and (optionally) actions
+const useModelStore = create<State & Action>((set) => ({
+  model: 'gpt-3.5-turbo',
+  updateModel: (model) => set(() => ({ model })),
+}));
+
+export { useModelStore };
