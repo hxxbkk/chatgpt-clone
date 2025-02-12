@@ -6,7 +6,7 @@ import { Sidebar } from './Sidebar';
 import { useSheetStore } from '@/store/sheet';
 import { DialogTitle } from '@radix-ui/react-dialog';
 
-export function MobileMenu() {
+export function MobileMenu({ children }: { children: React.ReactNode }) {
   const open = useSheetStore((state) => state.open);
   const setOpen = useSheetStore((state) => state.setOpen);
 
@@ -17,8 +17,7 @@ export function MobileMenu() {
           <Menu />
         </SheetTrigger>
         <SheetContent side="left" className="p-0">
-          <DialogTitle className="sr-only">모바일 메뉴</DialogTitle>
-          <Sidebar />
+          {children}
         </SheetContent>
       </Sheet>
     </div>
