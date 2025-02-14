@@ -4,7 +4,8 @@ import db from '@/db';
 import { verifySession } from './sessions';
 import { conversation, message } from '@/db/schema';
 import { revalidatePath } from 'next/cache';
-import { BASE_URL, CHAT_ROUTES } from '@/constants/routes';
+import { BASE_URL } from '@/constants/routes';
+import { eq } from 'drizzle-orm';
 
 export const addMessages = async (
   conversationId: string,
@@ -22,8 +23,6 @@ export const addMessages = async (
     content: assistantContent,
     role: 'assistant',
   });
-
-  revalidatePath(`${CHAT_ROUTES.CONVERSATIONS}/${conversationId}`);
 };
 
 export const createConversation = async (name: string) => {
@@ -40,4 +39,13 @@ export const createConversation = async (name: string) => {
   revalidatePath(BASE_URL);
 
   return result[0];
+};
+
+export const updateConversation = async (id: string, name: string) => {
+  await db
+    .update(conversation)
+    .set({ name, updatedAt: new Date() })
+    .where(eq(conversation.id, id));
+
+  revalidatePath(BASE_URL);
 };
