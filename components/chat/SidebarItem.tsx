@@ -16,11 +16,14 @@ import {
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 import { Ellipsis, Pencil, Trash } from 'lucide-react';
-import { usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { useSheetStore } from '@/store/sheet';
 import toast from 'react-hot-toast';
-import { updateConversation } from '@/actions/conversation';
+import { deleteConversation, updateConversation } from '@/actions/conversation';
+import { useModalStore } from '@/store/modal';
+import { ModalFooter } from '../modal/ModalFooter';
+import { BASE_URL } from '@/constants/routes';
 
 type Props = {
   item: {
@@ -34,9 +37,14 @@ type Props = {
 export function SidebarItem({ item }: Props) {
   const { id, href, icon, label } = item;
   const pathname = usePathname();
+  const params = useParams<{ conversationId: string }>();
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [value, setValue] = useState(item.label);
+  const openModal = useModalStore((state) => state.openModal);
+  const closeModal = useModalStore((state) => state.closeModal);
+
   const setOpen = useSheetStore((state) => state.setOpen);
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -65,6 +73,34 @@ export function SidebarItem({ item }: Props) {
         toast.error('이름 수정에 실패하였습니다.');
       }
     }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await deleteConversation(id);
+
+      toast.success('삭제에 성공했습니다.');
+
+      if (params.conversationId === id) {
+        router.push(BASE_URL);
+      }
+
+      closeModal();
+    } catch (error) {
+      console.error(error);
+      toast.error('삭제에 실패했습니다.');
+    }
+  };
+
+  const clickDelete = (event: MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
+    //모달 로직
+    openModal({
+      title: '정말 삭제하겠습니까?',
+      description: '삭제 후 데이터는 복구하기 어려울 수 있습니다.',
+      footer: <ModalFooter onCancel={closeModal} onConfirm={handleDelete} />,
+    });
   };
 
   const clickEdit = (event: MouseEvent<HTMLDivElement>) => {
@@ -127,7 +163,7 @@ export function SidebarItem({ item }: Props) {
               <Pencil size={18} />
               Edit
             </DropdownMenuItem>
-            <DropdownMenuItem className="gap-2">
+            <DropdownMenuItem className="gap-2" onClick={clickDelete}>
               <Trash size={18} />
               Delete
             </DropdownMenuItem>
