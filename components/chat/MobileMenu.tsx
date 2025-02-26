@@ -2,9 +2,8 @@
 
 import { Menu } from 'lucide-react';
 import { Sheet, SheetContent, SheetTrigger } from '../ui/sheet';
-import { Sidebar } from './Sidebar';
+
 import { useSheetStore } from '@/store/sheet';
-import { DialogTitle } from '@radix-ui/react-dialog';
 
 export function MobileMenu({ children }: { children: React.ReactNode }) {
   const open = useSheetStore((state) => state.open);
