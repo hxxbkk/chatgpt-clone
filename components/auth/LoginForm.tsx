@@ -30,7 +30,7 @@ export function LoginForm() {
 
   return (
     <FormCard
-      title="로그인인"
+      title="로그인"
       footer={{ label: '아직 계정이 없으신가요?', href: '/signup' }}
     >
       <form action={action} className="space-y-6">
