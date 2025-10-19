@@ -1,7 +1,7 @@
 'use server';
 
 import db from '@/db';
-import { verifySession } from './sessions';
+import { verifySession } from '@/actions/sessions';
 import { conversation, message } from '@/db/schema';
 import { revalidatePath } from 'next/cache';
 import { BASE_URL } from '@/constants/routes';

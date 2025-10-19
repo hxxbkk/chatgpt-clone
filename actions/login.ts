@@ -3,7 +3,7 @@
 import bcrypt from 'bcryptjs';
 import { getUserByEmail } from '@/data/user';
 import { LoginSchema } from '@/schemas/auth';
-import { createSession } from './sessions';
+import { createSession } from '@/actions/sessions';
 import { redirect } from 'next/navigation';
 
 export const login = async (_: any, formData: FormData) => {
